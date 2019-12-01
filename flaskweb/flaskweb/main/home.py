@@ -2,9 +2,9 @@ from flask import Blueprint, request, render_template, Flask, flash, redirect, u
 
 app = Flask(__name__)
 
-main = Blueprint('main', __name__, url_prefix='/')
+#main = Blueprint('main', __name__, url_prefix='/')
 
-@main.route('/home')
+@app.route('/home')
 def main():
     # Check if user is loggedin
     # if 'loggedin' in session:

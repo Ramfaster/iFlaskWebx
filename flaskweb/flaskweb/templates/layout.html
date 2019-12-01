@@ -54,11 +54,11 @@
           <!-- Navbar right side -->
           <div class="navbar-nav mt-mb-0">
             {% if session['loggedin'] %}
-              <a class="nav-item nav-link" href="{#{ url_for('main.login') }#}">Login</a>
+              <a class="nav-item nav-link" href="{#{ url_for('main.logout') }#}">로그아웃</a>
             {% else %}
-              <a class="nav-item nav-link" href="{#{ url_for('logout') }#}">LogOut</a>
+              <a class="nav-item nav-link" href="{#{ url_for('main.login') }#}">Login</a>
+              <a class="nav-item nav-link" href="{#{ url_for('main.registration') }#}">Register</a>
             {% endif %}
-            <a class="nav-item nav-link" href="{#{ url_for('registration') }#}">Register</a>
           </div>
         </div>
       </nav>

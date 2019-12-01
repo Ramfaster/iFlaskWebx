@@ -32,10 +32,9 @@ posts = [
 @main.route('/')
 @main.route('/index')
 def index():
+    print("#1 : index redirect")
     # Check if user is loggedin
-    # if 'loggedin' in session:
-    print("#1 : ", session['loggedin'])
-    if session['loggedin']:
+    if 'loggedin' in session:
         # User is loggedin show them the home page
         return render_template('/main/home.html', username=session['username'])
     # User is not loggedin redirect to login page
@@ -43,7 +42,6 @@ def index():
 
 @main.route('/login',methods=['GET', 'POST'])
 def login():
-    print("#2 : ", session['loggedin'])
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -55,10 +53,11 @@ def login():
         try:
             sql = "SELECT * FROM TB_USER WHERE user_id = '%s'"%(username)
             row = db_class.executeOne(sql)
-        finally:
-            print('Error')
+        except Exception as e:
+            print(e)
 
         # If account_id exists in account_ids table in out database
+        print("#2-1 USER_ID: ", row['USER_ID'])
         if row['USER_ID'] == username:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
@@ -73,24 +72,17 @@ def login():
     # Show the login form with message (if any)
     return render_template('/main/login.html', msg=msg)
 
-@app.route('/logout')
+@main.route('/logout',methods=['GET', 'POST'])
 def logout():
     # Remove session data, this will log the user out
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   # Redirect to login page
-   return redirect(url_for('main.login'))
+    print("#3 : ", session['loggedin'])
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
 
-# def main():
-#     # Check if user is loggedin
-#     # if 'loggedin' in session:
-#     print("#1 : ", session['loggedin'])
-#     if session['loggedin']:
-#         # User is loggedin show them the home page
-#         return render_template('/main/main.html', username=session['username'])
-#     # User is not loggedin redirect to login page
-#     return redirect(url_for('main.login'))
+
+   # Redirect to login page
+    return redirect(url_for('main.index'))
 
 @main.route('/register',methods=['GET', 'POST'])
 def register():
@@ -108,18 +100,11 @@ def register():
     # Show registration form with message (if any)
     return render_template('/main/register.html', msg=msg)
 
-
-
-@main.route('/logout')
-def logout():
-    # Remove session data, this will log the user out
-   session.pop('loggedin', None)
-   session.pop('id', None)
-   session.pop('username', None)
-   # Redirect to login page
-   return redirect(url_for('main.login'))
-
 @main.route('/about')
 def about():
     return render_template('/main/about.html', title='About')
+
+@main.route('/home')
+def home():
+    return render_template('/main/home.html', title='Home')
 
