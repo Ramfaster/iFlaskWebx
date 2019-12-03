@@ -2,7 +2,6 @@ from flask import Blueprint, request, render_template, Flask, flash, redirect, u
 from flask import current_app as app
 from datetime import datetime
 import re
-
 from flaskweb.module import dbModule
 
 app = Flask(__name__)
@@ -10,37 +9,8 @@ app = Flask(__name__)
 main = Blueprint('main', __name__, url_prefix='/')
 
 db_class = dbModule.Database()
-posts = [
-    {
-        'author': {
-            'username': 'test-user'
-        },
-        'title': '첫 번째 포스트',
-        'content': '첫 번째 포스트 내용입니다.',
-        'date_posted': datetime.strptime('2018-08-01', '%Y-%m-%d')
-    },
-    {
-        'author': {
-            'username': 'test-user'
-        },
-        'title': '두 번째 포스트',
-        'content': '두 번째 포스트 내용입니다.',
-        'date_posted': datetime.strptime('2018-08-03', '%Y-%m-%d')
-    },
-]
 
-@main.route('/')
-@main.route('/index')
-def index():
-    print("#1 : index redirect")
-    # Check if user is loggedin
-    if 'loggedin' in session:
-        # User is loggedin show them the home page
-        return render_template('/main/home.html', username=session['username'])
-    # User is not loggedin redirect to login page
-    return redirect(url_for('main.login'))
-
-@main.route('/login',methods=['GET', 'POST'])
+@main.route('/', methods=['GET', 'POST'])
 def login():
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
@@ -64,25 +34,26 @@ def login():
             session['user_id'] = row['USER_ID']
             session['username'] = row['NAME']
             # Redirect to home page
-            return render_template('/main/home.html', posts=posts)
+            print("#2-1 Redirect to home page ")
+            #return redirect(url_for('main.home'), username=session['username'])
+            return render_template('/main/home.html', username=session['username'])
             #return 'Logged in successfully!'
         else:
             # account_id doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
     # Show the login form with message (if any)
-    return render_template('/main/login.html', msg=msg)
+    return render_template('index.html', msg=msg)
 
 @main.route('/logout',methods=['GET', 'POST'])
 def logout():
     # Remove session data, this will log the user out
-    print("#3 : ", session['loggedin'])
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('username', None)
 
-
-   # Redirect to login page
-    return redirect(url_for('main.index'))
+    # Redirect to login page
+    print("#3 : Redirect to login page")
+    return redirect(url_for('main.login'))
 
 @main.route('/register',methods=['GET', 'POST'])
 def register():
@@ -100,11 +71,28 @@ def register():
     # Show registration form with message (if any)
     return render_template('/main/register.html', msg=msg)
 
-@main.route('/about')
-def about():
-    return render_template('/main/about.html', title='About')
-
 @main.route('/home')
 def home():
-    return render_template('/main/home.html', title='Home')
+    # Check if user is loggedin
+    if 'loggedin' in session:
+        # User is loggedin show them the home page
+        return render_template('/main/home.html')
+    # User is not loggedin redirect to login page
+    return redirect(url_for('main.login'))
+
+@main.route('/about')
+def about():
+    # Check if user is loggedin
+    if 'loggedin' in session:
+        # We need all the account info for the user so we can display it on the profile page
+        # Check if account_id exists using MySQL
+        try:
+            sql = "SELECT * FROM TB_USER WHERE user_id = '%s'" %session['user_id']
+            row = db_class.executeOne(sql)
+        except Exception as e:
+            print(e)
+        # Show the profile page with account info
+        return render_template('/main/about.html', account=row)
+    # User is not loggedin redirect to login page
+    return redirect(url_for('main.login'))
 
