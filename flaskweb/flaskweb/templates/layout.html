@@ -1,95 +1,111 @@
-<!DOCTYPE HTML>
-<html lang="kr">
+<!DOCTYPE html>
+<html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
-
-    {% if title %}
-      <title>Ramfaster - {{ title }}</title>
-    {% else %}
-      <title>Ramfaster 블로그</title>
-    {% endif %}
-
+    <title>Ramfaster</title>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 
-    <!-- Font awesome CSS -->
-     <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts/all.css') }}">
-<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"-->
-<!--          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">-->
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="{{ url_for('static', filename='assets/img/favicons/manifest.json') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='assets/img/favicons/safari-pinned-tab.svg') }}" color="#563d7c">
+    <link rel="icon" href="{{ url_for('static', filename='assets/img/favicons/favicon.ico') }}">
+    <meta name="msapplication-config" content="assets/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#563d7c">
 
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
-
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/signin.css') }}">
-
-    <!-- Sticky footer -->
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/sticky-footer/">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/sticky-footer.css') }}">
-
-    {% block stylesheet %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
   </head>
+  <body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="#">{{ username }} Sign out</a>
+        </li>
+      </ul>
+    </nav>
 
-  <body class="d-flex flex-column h-100">
-    <header class="site-header">
-      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark mb-4">
-        <a class="navbar-brand" href="{{ url_for('main.home') }}">Ramfaster 블로그</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('main.about') }}">About</a>
-            </li>
-          </ul>
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+                  <span data-feather="home"></span>
+                  Dashboard <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="file"></span>
+                  Orders
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="shopping-cart"></span>
+                  Products
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="users"></span>
+                  Customers
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="bar-chart-2"></span>
+                  Reports
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="layers"></span>
+                  Integrations
+                </a>
+              </li>
+            </ul>
 
-          <!-- Navbar right side -->
-          <div class="navbar-nav mt-mb-0">
-            {% if session['loggedin'] %}
-              <a class="nav-item nav-link" href="{#{ url_for('main.logout') }#}">로그아웃</a>
-            {% else %}
-              <a class="nav-item nav-link" href="{#{ url_for('main.login') }#}">Login</a>
-              <a class="nav-item nav-link" href="{#{ url_for('main.registration') }#}">Register</a>
-            {% endif %}
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Dic of Terms</span>
+              <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="file-text"></span>
+                  표준용어
+                </a>
+              </li>
+            </ul>
           </div>
-        </div>
-      </nav>
-    </header>
-
-    <main role="main" class="flex-shrink-0">
-    <!-- Main content block -->
-    {% block content %}{% endblock %}
-    </main>
-
-    <footer class="footer mt-auto py-3">
-      <div class="container">
-        <span class="text-muted">@2019 Ramfaster Corp all rights reserved</span>
+        </nav>
       </div>
-    </footer>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-    		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-    <!-- Font awesome -->
-    <script defer src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"
-            integrity="sha384-4oV5EgaV02iISL2ban6c/RmotsABqE4yZxZLcYMAdG7FAPsyHYAPpywE9PJo+Khy" crossorigin="anonymous"></script>
-
-    <!-- Custom scripts -->
-    {% block scripts %}{% endblock %}
+    </div>
   </body>
 </html>
