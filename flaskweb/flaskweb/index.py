@@ -4,13 +4,13 @@ from datetime import datetime
 import re
 from flaskweb.module import dbModule
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
-# main = Blueprint('main', __name__, url_prefix='/')
+main_blueprint = Blueprint('main', __name__, url_prefix='/')
 
 db_class = dbModule.Database()
 
-@main.route('/', methods=['GET', 'POST'])
+@main_blueprint.route('/', methods=['GET', 'POST'])
 def login():
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
@@ -43,7 +43,7 @@ def login():
     # Show the login form with message (if any)
     return render_template('index.html', msg=msg)
 
-@main.route('/logout',methods=['GET', 'POST'])
+@main_blueprint.route('/logout',methods=['GET', 'POST'])
 def logout():
     # Remove session data, this will log the user out
     session.pop('loggedin', None)
@@ -54,7 +54,7 @@ def logout():
     print("#3 : Redirect to login page")
     return redirect(url_for('main.login'))
 
-@main.route('/register',methods=['GET', 'POST'])
+@main_blueprint.route('/register',methods=['GET', 'POST'])
 def register():
     # Output message if something goes wrong...
     msg = ''
@@ -70,7 +70,7 @@ def register():
     # Show registration form with message (if any)
     return render_template('/main/register.html', msg=msg)
 
-@main.route('/home')
+@main_blueprint.route('/home')
 def home():
     # Check if user is loggedin
     if 'loggedin' in session:
@@ -79,7 +79,7 @@ def home():
     # User is not loggedin redirect to login page
     return redirect(url_for('main.login'))
 
-@main.route('/about')
+@main_blueprint.route('/about')
 def about():
     # Check if user is loggedin
     if 'loggedin' in session:
@@ -94,10 +94,4 @@ def about():
         return render_template('/main/about.html', account=row)
     # User is not loggedin redirect to login page
     return redirect(url_for('main.login'))
-
-
-if __name__ == "__main__":
-    app.secret_key = 'flaskweb'
-    app.config['SESSION_TYPE'] = 'memcached'
-    app.run(debug=True)
 
